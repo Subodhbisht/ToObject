@@ -9,9 +9,6 @@ public class Misc {
         String s = "{\"userId\":1,\"order\":\"Samsung N\",\"price\":\"1000000\",\"orderPlacedOn\":1622130279662}";
         Order order = StringToObject.fromString(s, Order.class);
         System.out.println("Order must be empty for now"+ order);
-
-//        String str ="\"userId";
-//        System.out.println(str +" is "+isDoubleQuoted(str));
     }
 
     static boolean isDoubleQuoted(String s) {
