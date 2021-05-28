@@ -1,5 +1,7 @@
 package sb.bisht.toObject;
 
+import sb.bisht.toObject.annotations.Required;
+
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,9 +16,9 @@ public class StringToObject {
 
         Field[] fields = desired.getDeclaredFields();
         for (Field field : fields) {
+            field.setAccessible(true);
             for (String key : jsonKeyValues.keySet()) {
                 if (field.getName().equals(key)) {
-                    field.setAccessible(true);
                     if (field.getType() == Long.class) {
                         field.set(t, Long.valueOf(jsonKeyValues.get(key)));
                     } else if (field.getType() == Date.class) {
@@ -24,6 +26,12 @@ public class StringToObject {
                     } else {
                         field.set(t, jsonKeyValues.get(key));
                     }
+                    continue;
+                }
+            }
+            if (field.getAnnotations().length != 0 && field.getAnnotation(Required.class).annotationType().equals(Required.class)) {
+                if (field.get(t) == null) {
+                    throw new Exception(field.getName() + " is required");
                 }
             }
         }
@@ -45,6 +53,7 @@ public class StringToObject {
         if (s.charAt(0) == 34 && s.charAt(s.length() - 1) == 34) {
             return s.substring(1, s.length() - 1);
         }
+//        return s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"' ? s.substring(1, s.length() - 1) : s;
         return s;
     }
 }
